@@ -1,0 +1,54 @@
+using HorizonSideRobots
+
+function pole(robot)
+    n::Integer = 0
+    m::Integer = 0
+    n = border(robot, Sud)
+    m = border(robot, West)
+
+    while isborder(robot, Nord) == false
+        strochka(robot)
+    end
+
+    border(robot, West)
+    border(robot, Sud)
+    move2!(robot, Ost, m)
+    move2!(robot, Nord, n)
+end
+
+function strochka(robot)
+
+    while isborder(robot, Nord) == false
+        putmarker!(robot)
+        move3!(robot, Ost)
+        move!(robot, Nord)
+        putmarker!(robot)
+        move3!(robot, West)
+        move!(robot, Nord)
+    end
+    putmarker!(robot)
+    move3!(robot, Ost)
+end
+
+function border(robot, side)
+    n::Int = 0
+    while isborder(robot, side) == false
+        move!(robot, side)
+        n += 1
+    end
+    return n
+end
+
+function move2!(robot, side, n)
+    for _ in 1:n
+        move!(robot, side)
+    end
+end
+
+function move3!(robot, side)
+    while isborder(robot, side) == false
+        move!(robot, side)
+        putmarker!(robot)  
+    end
+end
+
