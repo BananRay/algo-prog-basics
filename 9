@@ -1,0 +1,61 @@
+using HorizonSideRobots
+
+function pole(r)
+    d::Int, l::Int = ugol(r)
+    sum::Int = d + l
+    x::Int, y::Int = 1, 1
+    while y <= 11
+        x = first_dot(r, x, y, sum)
+        string(r, x, y, sum)
+        y += 1
+        x = 1
+    end
+    
+end
+
+function ugol(r)
+    d::Int = 0
+    l::Int = 0
+    for side in (Sud, West)
+        while !isborder(r, side)
+            move!(r, side)
+            if side == Sud
+                d += 1
+            else
+                l += 1
+            end
+        end
+    end
+    return d+1, l+1
+end
+
+function first_dot(r, x, y, sum)
+    if (x + y) % 2 == sum % 2
+        putmarker!(r)
+    else
+        move!(r, Ost)
+        putmarker!(r)
+        x += 1
+    end
+    return x
+end
+
+function string(r, x, y, sum)
+    while !isborder(r, Ost)
+        move!(r, Ost)
+        x += 1
+        if (x + y) % 2 == sum % 2
+            putmarker!(r)
+        end
+    end
+    movetostart!(r)
+    if !isborder(r, Nord)
+        move!(r, Nord)
+    end
+end
+
+function movetostart!(r)
+    while !isborder(r, West)
+        move!(r, West)
+    end
+end
