@@ -2,9 +2,11 @@ using HorizonSideRobots
 
 function pole(r)
     d::Int, l::Int = ugol(r)
+    a::Int, b::Int = r_pole(r)
+    ugol(r)
     sum::Int = d + l + 2
     x::Int, y::Int = 1, 1
-    while y <= 11
+    while y <= b + 1
         string(r, x, y, sum)
         y += 1
     end
@@ -60,4 +62,18 @@ function vosvr(x, d, l)
         move!(x, Ost)
         l -= 1
     end
+end
+
+function r_pole(r)
+    x::Int = 0
+    y::Int = 0
+    while !isborder(r, Ost)
+        move!(r, Ost)
+        x += 1
+    end
+    while !isborder(r, Nord)
+        move!(r, Nord)
+        y += 1
+    end
+    return x, y
 end
