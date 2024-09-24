@@ -2,15 +2,14 @@ using HorizonSideRobots
 
 function pole(r)
     d::Int, l::Int = ugol(r)
-    sum::Int = d + l
+    sum::Int = d + l + 2
     x::Int, y::Int = 1, 1
     while y <= 11
-        x = first_dot(r, x, y, sum)
         string(r, x, y, sum)
         y += 1
-        x = 1
     end
-    
+    ugol(r)
+    vosvr(r, d, l)
 end
 
 function ugol(r)
@@ -26,27 +25,19 @@ function ugol(r)
             end
         end
     end
-    return d+1, l+1
-end
-
-function first_dot(r, x, y, sum)
-    if (x + y) % 2 == sum % 2
-        putmarker!(r)
-    else
-        move!(r, Ost)
-        putmarker!(r)
-        x += 1
-    end
-    return x
+    return d, l
 end
 
 function string(r, x, y, sum)
     while !isborder(r, Ost)
-        move!(r, Ost)
-        x += 1
         if (x + y) % 2 == sum % 2
             putmarker!(r)
         end
+        move!(r, Ost)
+        x += 1
+    end
+    if (x + y) % 2 == sum % 2
+        putmarker!(r)
     end
     movetostart!(r)
     if !isborder(r, Nord)
@@ -57,5 +48,16 @@ end
 function movetostart!(r)
     while !isborder(r, West)
         move!(r, West)
+    end
+end
+
+function vosvr(x, d, l)
+    while d != 0
+        move!(x, Nord)
+        d -= 1
+    end
+    while l != 0
+        move!(x, Ost)
+        l -= 1
     end
 end
