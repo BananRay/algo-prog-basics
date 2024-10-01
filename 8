@@ -1,0 +1,37 @@
+using HorizonSideRobots
+
+function pole(r)
+    n::Int = 1
+    while true
+        if tailpig(r, n) == 1
+            break
+        end
+        n+=1
+    end
+end
+
+function tailpig(r, n)
+    for side in (Nord, Ost, Sud, West, Nord, Nord, Ost)
+        if side in (Nord, Ost)
+            if moveandcheck!(r, n, side) == 1
+                return 1
+            end
+        else
+            if moveandcheck!(r, n*2, side) == 1
+                return 1
+            end
+        end
+    end
+    moveandcheck!(r, n, Sud)
+end
+
+function moveandcheck!(r, n, side)
+    while n != 0
+        move!(r, side)
+        if ismarker(r)
+            return 1
+        end
+        n -= 1
+    end
+    return 0
+end
