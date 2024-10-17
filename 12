@@ -6,7 +6,6 @@ function main(r)
     while !isborder(r, Nord)
         cnt = prohod(r, state, cnt, side)
         side = inverse(side)
-        println(cnt)
     end
     println(cnt)
     firstdot(r, x, y)
