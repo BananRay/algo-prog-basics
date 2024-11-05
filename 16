@@ -1,0 +1,17 @@
+using HorizonSideRobots
+
+function shuttle!(stop_condition::Function, robot, start_side)
+    s = start_side
+    n = 0
+    while !stop_condition(s)
+        move!(robot, s, n)
+        s = inverse(s)
+        n += 1
+    end
+end
+
+function HorizonSideRobots.move!(robot, s, n)
+    for _ in 1:n
+        move!(robot, s)
+    end
+end
