@@ -1,0 +1,38 @@
+using HorizonSideRobots
+
+mutable struct MarkRobot
+    robot::Robot
+    flag::Bool
+end
+
+function movesteps!(r::MarkRobot, n, side)
+    while n != 1
+        r.flag == true && putmarker!(r.robot)
+        move!(r.robot, side)
+        r.flag = !r.flag
+        n-=1
+    end
+    r.flag == true && putmarker!(r.robot)
+end
+
+function chess!(r::MarkRobot, n)
+    markstring!(r, n, Ost)
+end
+
+function markfield!(r, n)
+    l = n
+    side = Ost
+    while l != 0
+        markstring!(r, n, side)
+        movesteps!(r, 2, Nord)
+        side = inverse(side)
+        l -= 1
+    end
+end
+
+function markstring!(r, n, side)
+    isborder(r.robot, side) && return nothing
+    movesteps!(r, n, side)
+end
+
+inverse(side::HorizonSide) = HorizonSide((Int(side)+2)%4)
