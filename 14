@@ -51,32 +51,6 @@ function snake!(stop_condition::Function, robot, sides::NTuple{2,HorizonSide})
     end
 end
 
-movetoborder!(robot, side) = while trymove!(robot, side) end
-movetoend!(stop_condition::Function, robot, side) = while !stop_condition() move!(robot, side) end
-
-
-inverse(side::HorizonSide) = HorizonSide(mod(Int(side)+2, 4))
-inverse(side::NTuple{2, HorizonSide}) = inverse.(side)
-left(side::HorizonSide) = HorizonSide(mod(Int(side)+1, 4))
-right(side::HorizonSide) = HorizonSide(mod(Int(side)+3, 4))
-
-function corner!(robot, sides::NTuple{2, HorizonSide})
-    for s in sides 
-        movetoend!(robot, s) do 
-            isborder(robot, s)
-        end
-    end
-end
-
-nummovetoend!(stop_condition::Function, robot, side) = begin 
-    n = 0 
-    while !stop_condition() 
-        move!(robot, side) 
-        n += 1 
-    end 
-    return n
-end
-
 function trymove!(robot, side)::Bool 
     nsteps = nummovetoend!(robot, right(side)) do 
         !isborder(robot, side) || isborder(robot, right(side)) 
@@ -95,3 +69,30 @@ function trymove!(robot, side)::Bool
     move!(robot, left(side), nsteps)  
     return result 
 end
+
+nummovetoend!(stop_condition::Function, robot, side) = begin 
+    n = 0 
+    while !stop_condition() 
+        move!(robot, side) 
+        n += 1 
+    end 
+    return n
+end
+
+function corner!(robot, sides::NTuple{2, HorizonSide})
+    for s in sides 
+        movetoend!(robot, s) do 
+            isborder(robot, s)
+        end
+    end
+end
+
+
+movetoborder!(robot, side) = while trymove!(robot, side) end
+movetoend!(stop_condition::Function, robot, side) = while !stop_condition() move!(robot, side) end
+
+
+inverse(side::HorizonSide) = HorizonSide(mod(Int(side)+2, 4))
+inverse(side::NTuple{2, HorizonSide}) = inverse.(side)
+left(side::HorizonSide) = HorizonSide(mod(Int(side)+1, 4))
+right(side::HorizonSide) = HorizonSide(mod(Int(side)+3, 4))
