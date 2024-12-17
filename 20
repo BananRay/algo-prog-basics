@@ -1,0 +1,46 @@
+using HorizonSideRobots
+
+mutable struct MarkRobot
+    robot::Robot
+    n::Int
+end
+
+HorizonSideRobots.ismarker(robot::MarkRobot) = ismarker(robot.robot)
+
+function moveside!(robot::MarkRobot, side)
+    if !isborder(robot.robot, side)
+        move!(robot.robot, side)
+        robot.n += 1
+    else
+        putmarker!(robot.robot)
+    end
+end
+
+function moveinverseside!(robot::MarkRobot, side)
+
+        move!(robot.robot, side)
+        robot.n -= 1
+end
+
+function main(r::MarkRobot, side)
+    #r.n = 0
+    toend!(r, side)
+    side = inverse(side)
+    tostart!(r, side)
+end
+
+function toend!(robot, side)
+    if !ismarker(robot)
+        moveside!(robot, side)
+        toend!(robot, side)
+    end
+end
+
+function tostart!(robot, side)
+    if robot.n != 0
+        moveinverseside!(robot, side)
+        tostart!(robot, side)
+    end
+end
+
+inverse(side::HorizonSide) = HorizonSide((Int(side)+2)%4)
